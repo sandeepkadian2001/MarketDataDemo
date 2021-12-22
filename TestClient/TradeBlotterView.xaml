@@ -1,0 +1,71 @@
+﻿<Window x:Class="TestClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestClient"
+        mc:Ignorable="d"
+        Title="TradeBlotterView" Height="450" Width="800" >
+    <Window.Resources>
+        <local:PriceToBackgroundConverter x:Key="PriceToBgConvertor" />
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70*" />
+            <ColumnDefinition Width="30*"/>
+        </Grid.ColumnDefinitions>
+        <Grid 
+            Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="90*" />
+            </Grid.RowDefinitions>
+            <Button Content="Button" HorizontalAlignment="Left" Margin="135,47,0,0" VerticalAlignment="Top" Width="75"/>
+            <DataGrid Name="TradeBlotterDataGrid" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding StockPrices}" 
+                  DataContext="{Binding}" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedStockPrice, Mode=TwoWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                    Width="50"
+                    Binding="{Binding Symbol}"
+                    Header="Symbol"
+                    IsReadOnly="True" />
+                    <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Price}"
+                    Header="Price"
+                    IsReadOnly="True" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="{Binding Path=ChangeInPrice, Converter={StaticResource PriceToBgConvertor}}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Last5PriceAvg}"
+                    Header="Previous 5 price Avg." />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="90*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Width="Auto" FontWeight="SemiBold" Content="Price History" HorizontalAlignment="Center"/>
+            <DataGrid Name="PriceHistoryDataGrid" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Last10Price}" 
+                  DataContext="{Binding SelectedStockPrice}" AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding Symbol}"
+                    Header="Symbol" />
+                    <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding Price}"
+                    Header="Last Price desc." />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
